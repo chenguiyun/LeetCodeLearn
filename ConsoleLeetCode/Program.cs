@@ -151,5 +151,26 @@ namespace ConsoleLeetCode
             }
             return re.Max();
         }
+
+        public bool UniqueOccurrences(int[] arr)
+        {
+            var li = new List<int>();
+            foreach (var a in arr)
+            {
+                li.Add(a);
+            }
+            var aaa = li.Distinct();
+            var bbb = new List<int>();
+            foreach (var a in aaa)
+            {
+                bbb.Add(li.Count(t => t.Equals(a)));
+            }
+            var ccc = bbb.Distinct();
+            if (bbb.Count > 0 && bbb.Count() > ccc.Count())
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
