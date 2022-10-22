@@ -10,10 +10,13 @@ namespace ConsoleLeetCode
         {
 
             //var re = Reverse(321);
-            char[] te = "aabbcc".ToArray();
-            int[] nums = { 3, 10, 5, 25, 2, 8 };
-            int re = FindMaximumXOR(nums);
-            Console.WriteLine(re);
+            //char[] te = "aabbcc".ToArray();
+            //int[] nums = { 3, 10, 5, 25, 2, 8 };
+            //int re = FindMaximumXOR(nums);
+            int[] num1 = { 1,2,3,0,0,0 };
+            int[] num2 = { 2, 5, 6 };
+            Merge(num1,3,num2,3);
+            Console.WriteLine(num1);
             Console.ReadKey();
 
         }
@@ -171,6 +174,33 @@ namespace ConsoleLeetCode
                 return false;
             }
             return true;
+        }
+        /// <summary>
+        /// 合并两个有序数组
+        /// </summary>
+        /// <param name="nums1"></param>
+        /// <param name="m"></param>
+        /// <param name="nums2"></param>
+        /// <param name="n"></param>
+        public static void Merge(int[] nums1, int m, int[] nums2, int n)
+        {
+            for (int i = 0; i < m; i++)
+            {
+                nums1[i] = nums1[i];
+            }
+            for (int j = 0; j < n; j++)
+            {
+                if (m+n>nums1.Length)
+                {
+                    nums1.Append(nums2[j]);
+                }
+                else
+                {
+                    nums1[j + m] = nums2[j];
+                }
+                
+            }
+            Array.Sort(nums1);
         }
     }
 }
