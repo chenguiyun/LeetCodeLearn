@@ -1,4 +1,5 @@
 using System;
+using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,9 +21,26 @@ namespace ConsoleLeetCode
             //int[] num2 = { 10, 8, 53, 63, 58, 83, 26, 10, 58, 3, 61, 56, 55, 38, 81, 29, 69, 55, 86, 23, 91, 44, 9, 98, 41, 48, 41, 16, 42, 72, 6, 4, 2, 81, 42, 84, 4, 13 };
             //var r = Intersect(num1, num2);
             //var r = Generate(1);
-            int[][] a = new int[][] {new[] {1, 2}, new[] {3, 4}, new[] { 5, 6 } };
-            var r = MatrixReshape(a, 2, 3);
-            Console.WriteLine(r);
+            //int[][] a = new int[][] {new[] {1, 2}, new[] {3, 4}, new[] { 5, 6 } };
+            //var r = MatrixReshape(a, 2, 3);
+            /*
+            char[][] a = new Char[][]
+            {
+                new Char[] {'5', '3', '.', '.', '7', '.', '.', '.', '.'},
+                new Char[] {'6', '.', '.', '1', '9', '5', '.', '.', '.'},
+                new Char[] {'.', '9', '8', '.', '.', '.', '.', '6', '.'},
+                new Char[] {'8', '.', '.', '.', '6', '.', '.', '.', '3'},
+                new Char[] {'4', '.', '.', '8', '.', '3', '.', '.', '1'},
+                new Char[] {'7', '.', '.', '.', '2', '.', '.', '.', '6'},
+                new Char[] {'.', '6', '.', '.', '.', '.', '2', '8', '.'},
+                new Char[] {'.', '.', '.', '4', '1', '9', '.', '.', '5'},
+                new Char[] {'.', '.', '.', '.', '8', '.', '.', '7', '9'}
+            };
+            var r = IsValidSudoku(a);
+            */
+            var m=new int[][]{new int[]{1,2,3,4}, new int[] { 2,0,0,5}, new int[] { 3,4,5,6}};
+            SetZeroes(m);
+            Console.WriteLine(m);
             Console.ReadKey();
 
         }
@@ -382,6 +400,187 @@ namespace ConsoleLeetCode
             {
                 return mat;
             }
+        }
+        /// <summary>
+        /// 有效的数独
+        /// </summary>
+        /// <param name="board"></param>
+        /// <returns></returns>
+        public static bool IsValidSudoku(char[][] board)
+        {
+            var empty = '.'.GetHashCode();
+            //横竖情况
+            for (int i = 0; i < board.Length; i++)
+            {
+                var wd= new List<int>();
+                var hd = new List<int>();
+                for (int j = 0; j < board[i].Length; j++)
+                {
+                    var w = board[i][j].GetHashCode();
+                    var h = board[j][i].GetHashCode();
+                    if (wd.Contains(w)|| hd.Contains(h))
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        if (w!=empty)
+                        {
+                            wd.Add(w);
+                        }
+
+                        if (h!= empty)
+                        {
+                            hd.Add(h);
+                        }
+                    }
+                }
+                //for (int j = 0; j < board[i].Length; j++)
+                //{
+                //    // 00 01 02 03 04 05 06 07 08
+                //    // 00 10 20 30 40 50 60 70 80
+                //   // 00 01 02 03 04 05 06 07 08
+                //      10 11 12 13 14 15 16 17 18
+                //      20 21 22 23 24 25 26 27 28
+                //      
+                //}
+
+            }
+            int m = 3;
+            var li = new List<int>();
+            for (int i = 0; i < board.Length;i++)
+            {
+                
+                var k = m-3;
+                while (k<m)
+                {
+                    var d = board[i][k];
+                    if (li.Contains(d.GetHashCode()))
+                    {
+                        return false;
+                    }
+                    if (d.GetHashCode()!=empty)
+                    {
+                        li.Add(d.GetHashCode());
+                    }
+
+                    k++;
+                }
+                if ((i + 1) * (k + 1) % 3 == 0 && i > 0)
+                {
+                    li.Clear();
+                }
+                if (i==board.Length-1 && k==m && k!=board.Length)
+                {
+                    m = m + 3;
+                    i = -1;
+                }
+
+            }
+            return true;
+        }
+        /// <summary>
+        /// 矩阵置零
+        /// </summary>
+        /// <param name="matrix"></param>
+        public static void SetZeroes(int[][] matrix)
+        {
+            var w = new List<int>();
+            var h = new List<int>();
+            int [][] num= new int[0][];
+            var map=new List<int[]>();
+            //这个是行列遍历分别标记需要修改的位置
+            //优化方案是第一次遍历标记某行或某列需要修改，在遍历修改一次
+            for (int i = 0; i < matrix.Length; i++)
+            {
+                for (int j = 0; j < matrix[i].Length; j++)
+                {
+                    var x = matrix[i][j];
+
+                    if (x==0)
+                    {
+                        for (int k = 0; k < matrix[i].Length; k++)
+                        {
+                            int[] b=new int[]{i,k};
+                            map.Add(b);
+                        }
+                    }
+                }
+
+            }
+            for (int i = 0; i < matrix[0].Length; i++)
+            {
+                for (int j = 0; j < matrix.Length; j++)
+                {
+                    if (j <= matrix.Length)
+                    {
+                        var y = matrix[j][i];
+                        if (y == 0)
+                        {
+                            for (int k = 0; k < matrix.Length; k++)
+                            {
+                                int[] b = new int[] { k, i };
+                                map.Add(b);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            for (int i = 0; i < map.Count; i++)
+            {
+                var x = map[i][0];
+                var y = map[i][1];
+                matrix[x][y] = 0;
+            }
+            //超时方案
+            //for (int i = 0; i < matrix.Length; i++)
+            //{
+            //    for (int j = 0; j < matrix[i].Length; j++)
+            //    {
+            //        if (w.Contains(i))
+            //        {
+            //            matrix[i][j] = 0;
+            //        }
+            //        for (int k = 0; k < matrix.Length; k++)
+            //        {
+            //            if (h.Contains(j))
+            //            {
+            //                matrix[k][j]=0;
+            //            }
+            //        }
+            //    }
+
+            //}
+            //for (int i = 0; i < matrix.Length; i++)
+            //{
+            //    var discover =false;
+            //    for (int j = 0; j < matrix[i].Length; j++)
+            //    {
+            //        if (matrix[i][j]==0)
+            //        {
+            //            w.Add(i);
+            //        }
+            //        if (matrix[j][i]==0)
+            //        {
+            //            h.Add(j);
+            //        }
+            //    }
+            //}
+            //w = w.Distinct().ToList();
+            //h = h.Distinct().ToList();
+            //for (int i = 0; i < matrix.Length; i++)
+            //{
+            //    for (int j = 0; j < matrix[i].Length;    j++)
+            //    {
+            //        if (w.Contains(i)|| h.Contains(j))
+            //        {
+            //            matrix[i][j] = 0;
+            //        }
+
+            //    }
+            //}
         }
     }
 }
