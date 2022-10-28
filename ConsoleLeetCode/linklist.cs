@@ -21,9 +21,9 @@ namespace ConsoleLeetCode
             //lll.AddFirst(ln);
             //var aaa=HasCycle(ln);
             //Console.WriteLine(aaa);
-            var node5 = new ListNode(1, null);
-            var node4 = new ListNode(1, node5);
-            var node3=new ListNode(1, node4);
+            var node5 = new ListNode(5, null);
+            var node4 = new ListNode(3, node5);
+            var node3=new ListNode(3, node4);
             var node2 = new ListNode(1, node3);
             var node1 = new ListNode(1, node2);
 
@@ -31,8 +31,10 @@ namespace ConsoleLeetCode
             var dnode2 = new ListNode(5, dnode3);
             var dnode1 = new ListNode(2, dnode2);
 
-            var r = MergeTwoLists(node1,dnode1);
-            var rs = RemoveElements(node1, 1);
+            //var r = MergeTwoLists(node1,dnode1);
+            //var rs = RemoveElements(node1, 1);
+            //var rss = ReverseList(node1);
+            var rd = DeleteDuplicates(node1);
         }
 
         /// <summary>
@@ -181,6 +183,66 @@ namespace ConsoleLeetCode
 
                 }
             return li[0].next;
+        }
+
+        /// <summary>
+        /// 反转链表
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static ListNode ReverseList(ListNode head)
+        {
+            //最佳解法是后一个的next等于现在
+            var li=new List<ListNode>();
+            var last=new ListNode(-1);
+            if (head==null)
+            {
+                return head;
+            }
+            while (head!=null)
+            {
+                li.Add(head);
+                if (head.next == null)
+                {
+                    last = head;
+                }
+                head = head.next;
+
+            }
+            for (int i = li.Count-1; i >=1; i--)
+            {
+                li[i].next = null;
+                li[i - 1].next = null;
+                li[i].next = li[i - 1];
+            }
+            return last;
+        }
+        /// <summary>
+        /// 删除排序链表中的重复元素
+        /// </summary>
+        /// <param name="head"></param>
+        /// <returns></returns>
+        public static ListNode DeleteDuplicates(ListNode head)
+        {
+            var pre = new ListNode(-1);
+            pre.next = head;
+            var p = new ListNode(-100);
+            p.next = head;
+            while (head!=null&&pre!=null)
+            {
+                if (pre.val==head.val)
+                {
+                    var next = head.next;
+                    pre.next = next;
+                    head = next;
+                }
+                else
+                {
+                    pre = pre.next;
+                    head = head.next;
+                }
+            }
+            return p.next;
         }
     }
     
