@@ -52,7 +52,8 @@ namespace ConsoleLeetCode
             //var b = "aabddccaaaaaa";
             //var re=CanConstruct(s, b);
             //var r = IsAnagram("rat", "car");
-            linklist.run();
+            //linklist.run();
+            Stack.run();
             //Console.WriteLine(r);
             Console.ReadKey();
 
