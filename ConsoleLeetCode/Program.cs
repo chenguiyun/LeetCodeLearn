@@ -54,7 +54,8 @@ namespace ConsoleLeetCode
             //var r = IsAnagram("rat", "car");
             //linklist.run();
             //Stack.run();
-            treePart.run();
+            //treePart.run();
+            arryPart.run();
             //Console.WriteLine(r);
             Console.ReadKey();
 
